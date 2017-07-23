@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>canvas demo-02</title>
+    <style>
+        html, body {
+            background: #ddd;
+        }
+        canvas {
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    <button onclick="stop()">stop</button>
+    <canvas id="myCanvas" width="400" height="300"></canvas>
+
+    <script>
+        var CANVAS_WIDTH = 400;
+        var CANVAS_HEIGHT = 300;
+        var ball = {
+            x: 60,
+            y: 60,
+            a: 2,
+            vx: 5,
+            vy: 8,
+            radius: 20,
+            color: 'green'
+        };
+
+        var timer;
+
+        window.onload = function() {
+            var canvas = document.getElementById('myCanvas');
+            var ctx = canvas.getContext('2d');
+
+            timer = setInterval(function() {
+                update();
+                renderBall(ctx);
+            }, 50);
+
+            renderBall(ctx);
+        };
+
+        function update() {
+            ball.x += ball.vx;
+            ball.y += ball.vy;
+            ball.vy += ball.a;
+            if (ball.y >= CANVAS_HEIGHT - ball.radius) {
+                ball.y = CANVAS_HEIGHT - ball.radius;
+//                ball.vy = - Math.max(0, Math.abs(ball.vy) - 4);
+                ball.vy = - ball.vy * 0.5;
+//                ball.a = ball.a * 0.5;
+
+                if (ball.vy === 0) {
+                    stop();
+                }
+            }
+            if (ball.x >= CANVAS_WIDTH - ball.radius) {
+                ball.x = CANVAS_WIDTH - ball.radius;
+                ball.vx = - ball.vx * 0.75;
+            }
+            if (ball.x < ball.radius) {
+                ball.x = ball.radius;
+                ball.vx = - ball.vx * 0.75;
+            }
+            console.log('-------');
+            console.log('ball.y=' + ball.y);
+            console.log('ball.vy=' + ball.vy);
+            console.log('ball.a=' + ball.a);
+
+        }
+
+        function renderBall(ctx) {
+            ctx.clearRect(0,0,ctx.canvas.width, ctx.canvas.height);
+
+            ctx.fillStyle = ball.color;
+            ctx.beginPath();
+            ctx.arc(ball.x, ball.y, ball.radius, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        function stop() {
+            clearInterval(timer);
+            timer = null;
+        }
+
+    </script>
+</body>
+</html>

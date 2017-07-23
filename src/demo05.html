@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>canvas demo-05</title>
+    <style>
+        html, body {
+            background: #ddd;
+        }
+        canvas {
+            background: white;
+        }
+    </style>
+    <script src="js/demo05.js"></script>
+</head>
+<body>
+    <button onclick="stop()">stop</button>
+    <canvas id="myCanvas" width="400" height="200"></canvas>
+
+    <script>
+
+        window.onload = function() {
+
+            var flowParticle = new FlowParticle('myCanvas', 400, 200);
+
+            flowParticle.draw();
+
+            setTimeout(flowParticle.stop, 30000);
+
+//            renderBall(ctx);
+        };
+
+
+
+    </script>
+</body>
+</html>

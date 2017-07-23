@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>canvas demo-04</title>
+    <style>
+        html, body {
+            background: #ddd;
+        }
+        canvas {
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    <button onclick="stop()">stop</button>
+    <canvas id="myCanvas" width="400" height="200"></canvas>
+
+    <script>
+        var CANVAS_WIDTH = 400;
+        var CANVAS_HEIGHT = 200;
+        var BALL_COUNT_MAX = 1000;
+        var BALL_COUNT = 100;
+        var COLOR = ['#c23531','#2f4554', '#61a0a8', '#d48265', '#91c7ae','#749f83',  '#ca8622', '#bda29a','#6e7074', '#546570', '#c4ccd3'];
+        var balls = [];
+
+        var timer;
+
+        window.onload = function() {
+            var canvas = document.getElementById('myCanvas');
+            var ctx = canvas.getContext('2d');
+
+            timer = setInterval(function() {
+                update();
+                render(ctx);
+            }, 50);
+
+            setTimeout(stop, 30000);
+
+//            renderBall(ctx);
+        };
+
+        function getBallCount() {
+            if (BALL_COUNT !== BALL_COUNT_MAX) {
+                ballTimer = setTimeout(function() {
+                    BALL_COUNT = Math.min(BALL_COUNT_MAX, BALL_COUNT + (BALL_COUNT_MAX / 100));
+                }, 1500);
+            }
+            return BALL_COUNT;
+        }
+
+        function getBalls() {
+            var count = Math.max(getBallCount() - balls.length, 0);
+//            console.log('-------');
+//            console.log('count = ' + count);
+
+            for (var i = 0; i < count; i++) {
+                var aBall = {
+                    x: -50,
+                    y: getRandom(20, 180),
+                    vx: getRandomFloat(3, 10, 2),
+                    vy: 0,
+                    radius: getRandom(2, 5),
+                    color: COLOR[getRandom(0, 10)]
+                };
+                balls.push(aBall);
+            }
+        }
+
+        function update() {
+            getBalls();
+            updateBall();
+        }
+
+        function updateBall() {
+//            console.log('-------');
+//            console.log('balls.length=' + balls.length);
+
+            var cnt = 0;
+            balls.map(function(ball, index, array) {
+                ball.x += ball.vx;
+                ball.y += ball.vy;
+
+//                if( ball.x + ball.radius > 0 && ball.x - ball.radius < CANVAS_WIDTH ) {
+                if( ball.x - ball.radius < CANVAS_WIDTH ) {
+                    balls[cnt++] = ball
+                }
+            });
+            while( balls.length > cnt ){
+                balls.pop();
+            }
+        }
+
+        function render(ctx) {
+            ctx.clearRect(0,0,ctx.canvas.width, ctx.canvas.height);
+
+            renderBall(ctx);
+        }
+
+        function renderBall(ctx) {
+            balls.map(function(ball, index, array) {
+                ctx.fillStyle = ball.color;
+                ctx.beginPath();
+                ctx.arc(ball.x, ball.y, ball.radius, 0, 2 * Math.PI);
+                ctx.fill();
+                ctx.closePath();
+            });
+        }
+
+        function stop() {
+            clearInterval(timer);
+            timer = null;
+        }
+
+        function getRandom(min, max) {
+            return min + (Math.floor(Math.random() * 10 * max)) % (max - min + 1);
+        }
+
+        function getRandomFloat(min, max, figure) {
+            var decimal = Math.floor(Math.random() * Math.pow(10, figure)) / Math.pow(10, figure);
+            return min + (Math.floor(Math.random() * 10 * max)) % (max - min + 1) + decimal;
+        }
+
+    </script>
+</body>
+</html>

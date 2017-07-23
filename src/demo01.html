@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>canvas demo-01</title>
+    <style>
+        html, body {
+            background: #ddd;
+        }
+        canvas {
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="myCanvas" width="800" height="600"></canvas>
+
+    <script>
+        var canvas = document.getElementById('myCanvas');
+        var ctx = canvas.getContext('2d');
+
+        ctx.fillStyle = "green";
+        ctx.fillRect(10, 10, 100, 100);
+
+        ctx.beginPath();
+        ctx.moveTo(120, 10);
+        ctx.lineTo(220, 10);
+        ctx.lineTo(220, 110);
+        ctx.lineTo(120, 110);
+        ctx.lineTo(120, 10);
+        ctx.stroke();
+        ctx.closePath();
+
+        ctx.beginPath();
+        // arc(x, y, radius, startAngle, endAngle, anticlockwise)
+        ctx.arc(280, 60, 50, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.beginPath();
+        // arc(x, y, radius, startAngle, endAngle, anticlockwise)
+        ctx.arc(390, 60, 50, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.closePath();
+
+    </script>
+</body>
+</html>
