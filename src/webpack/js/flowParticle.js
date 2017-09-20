@@ -1,16 +1,17 @@
 /**
- * Created by zhijie.huang on 2017/7/19.
+ * Created by zhijie.huang on 2017/7/25.
  */
+
 // const COLOR = ['#c23531','#2f4554', '#61a0a8', '#d48265', '#91c7ae','#749f83',  '#ca8622', '#bda29a','#6e7074', '#546570', '#c4ccd3'];
 const COLOR = [
-    '#c21b0e',
-    '#2f4554',
+    '#e73935',
+    '#3079d9',
     '#9d9d9d'
 ];
 
 class FlowParticle {
-    constructor(id, width = 100, height = 100, count = 1000, arc = 0) {
-        this.canvas = document.getElementById(id);
+    constructor(canvas, width = 100, height = 100, count = 1000, arc = 0) {
+        this.canvas = canvas;
         this.ctx = this.canvas.getContext('2d');
 
         this.canvasWidth = width;
@@ -32,7 +33,7 @@ class FlowParticle {
         this.ballRadiusMax = 5;
         this.balls = [];
     }
-    
+
     static getRandom(min, max) {
         return min + (Math.floor(Math.random() * 10 * max)) % (max - min + 1);
     }
@@ -41,14 +42,14 @@ class FlowParticle {
         const decimal = Math.floor(Math.random() * Math.pow(10, figure)) / Math.pow(10, figure);
         return min + (Math.floor(Math.random() * 10 * max)) % (max - min + 1) + decimal;
     }
-    
+
     draw() {
         this.timer = setInterval(() => {
             this._update();
             this._render(this.ctx);
         }, 50);
     }
-    
+
     _getBallCount() {
         if (this.ballCount !== this.ballCountMax) {
             setTimeout(() => {
@@ -60,9 +61,9 @@ class FlowParticle {
 
     _getBalls() {
         const count = Math.max(this._getBallCount() - this.balls.length, 0);
-    //            console.log('-------');
-    //            console.log('count = ' + count);
-    
+        //            console.log('-------');
+        //            console.log('count = ' + count);
+
         for (let i = 0; i < count; i++) {
             let aBall = {
                 x: this.canvasOriginX * 1.7,
@@ -86,8 +87,8 @@ class FlowParticle {
         this.balls.map((ball) => {
             ball.x += ball.vx;
             ball.y += ball.vy;
-    
-    //                if( ball.x + ball.radius > 0 && ball.x - ball.radius < canvasWidth ) {
+
+            //                if( ball.x + ball.radius > 0 && ball.x - ball.radius < canvasWidth ) {
             if( ball.x - ball.radius < this.canvasWidth ) {
                 this.balls[cnt++] = ball
             }
@@ -119,6 +120,7 @@ class FlowParticle {
         clearInterval(that.timer);
         that.timer = null;
     }
-    
+
 }
 
+export default FlowParticle;
