@@ -7,7 +7,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const ENTRY_PATH = 'src/webpack/js/';
+const ENTRY_PATH = 'src/webpack/js/modules/';
 const TPL_PATH = 'src/webpack/';
 const OUT_PATH = 'dist/webpack/';
 
@@ -25,7 +25,7 @@ function getEntry(aPath) {
     const webpackEntry = {};
 
     files.map(function(item) {
-        if (item.match(/demo/)) {
+        if (item.match(/webpack/)) {
             const chunks = path.basename(item, '.js');
             webpackEntry[chunks] = path.join(__dirname, ENTRY_PATH, item);
         }
@@ -40,7 +40,7 @@ function getPlugin(aPath) {
 
     files.map(function(item) {
         // console.log('tml:' + item);
-        if (item.match(/demo/)) {
+        if (item.match(/webpack/)) {
             const template = path.join(__dirname, TPL_PATH, getTemplate(item));
             const chunks = path.basename(item, '.html');
             const filename = item;

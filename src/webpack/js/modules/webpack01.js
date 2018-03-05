@@ -1,11 +1,8 @@
-import FlowParticleHelper from './flowParticleHelper';
+import FlowParticleHelper from '../biz/flowParticleHelper';
 
 let flowParticleHelper;
 window.onload = function() {
     // draw();
-
-    alert(0);
-
     flowParticleHelper = new FlowParticleHelper('canvasWrap', 500, 100);
 };
 function draw() {
