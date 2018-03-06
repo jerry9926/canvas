@@ -13,6 +13,7 @@
     </style>
 </head>
 <body>
+    <h1>小球运动</h1>
     <button onclick="stop()">stop</button>
     <canvas id="myCanvas" width="400" height="300"></canvas>
 
@@ -22,7 +23,7 @@
         var ball = {
             x: 60,
             y: 60,
-            a: 2,
+            ay: 2,
             vx: 5,
             vy: 8,
             radius: 20,
@@ -46,7 +47,9 @@
         function update() {
             ball.x += ball.vx;
             ball.y += ball.vy;
-            ball.vy += ball.a;
+            ball.vy += ball.ay;
+            ball.x = Math.ceil(ball.x);
+            ball.y = Math.ceil(ball.y);
             if (ball.y >= CANVAS_HEIGHT - ball.radius) {
                 ball.y = CANVAS_HEIGHT - ball.radius;
 //                ball.vy = - Math.max(0, Math.abs(ball.vy) - 4);
@@ -65,10 +68,15 @@
                 ball.x = ball.radius;
                 ball.vx = - ball.vx * 0.75;
             }
+            ball.ay = ball.ay - 0.02;
+            if (ball.ay <= 0) {
+                ball.ay = 0;
+                ball.vy = 0;
+            }
             console.log('-------');
             console.log('ball.y=' + ball.y);
             console.log('ball.vy=' + ball.vy);
-            console.log('ball.a=' + ball.a);
+            console.log('ball.ay=' + ball.ay);
 
         }
 
