@@ -32,6 +32,8 @@ class FlowParticle {
         this.ballRadiusMin = 2;
         this.ballRadiusMax = 5;
         this.balls = [];
+
+        this.stoped = true;
     }
 
     static getRandom(min, max) {
@@ -44,6 +46,10 @@ class FlowParticle {
     }
 
     draw() {
+        if (!this.stoped) {
+            return;
+        }
+        this.stoped = false;
         this.timer = setInterval(() => {
             this._update();
             this._render(this.ctx);
@@ -116,9 +122,13 @@ class FlowParticle {
 
     stop() {
         const that = this;
+        if (this.stoped) {
+            return;
+        }
         console.log('stop called', that);
         clearInterval(that.timer);
         that.timer = null;
+        this.stoped = true;
     }
 
 }

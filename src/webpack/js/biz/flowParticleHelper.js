@@ -22,6 +22,14 @@ class FlowParticleHelper {
         const flow = new FlowParticle(canvas, this.width, this.height);
 
         flow.draw();
+
+        this.flow = flow;
+    }
+    stop() {
+        this.flow && this.flow.stop();
+    }
+    run() {
+        this.flow && this.flow.draw();
     }
 }
 

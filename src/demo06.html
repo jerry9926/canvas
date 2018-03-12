@@ -7,9 +7,6 @@
         html, body {
             background: #ddd;
         }
-        canvas {
-            /*background: white;*/
-        }
     </style>
 </head>
 <body>
@@ -35,7 +32,9 @@
         // canvas.width = 100;
         // canvas.height = 55;
 
-        ctx.drawImage(imgElem, 0, 0, 500, 500);
+        imgElem.onload = function() {
+            ctx.drawImage(imgElem, 0, 0);
+        }
 
         ctx.font = "18px Verdana";
         ctx.fillText(text, 36, 25);
