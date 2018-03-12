@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>canvas demo-08</title>
+    <style>
+        html, body {
+            background: #ddd;
+        }
+        canvas {
+            background: #FFF;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>鼠标位置坐标</h1>
+    <p id="info"></p>
+    <canvas id="myCanvas" width="600" height="600"></canvas>
+
+<script>
+
+    var canvas = document.getElementById('myCanvas');
+    var ctx = canvas.getContext('2d');
+
+    function windowToCanvas(canvas, x, y) {
+        var bbox = canvas.getBoundingClientRect();
+        return {
+            x: Math.floor(x - bbox.left * (canvas.width / bbox.width)),
+            y: Math.floor(y - bbox.top * (canvas.height/ bbox.height))
+        }
+    }
+
+    function drawGuidelines(x, y) {
+        var canvas = ctx.canvas;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+    }
+
+    function showLoc(x, y) {
+        document.getElementById('info').innerText = '('+ x + ', ' + y +')';
+    }
+
+    canvas.onmousemove = function(e) {
+        var loc = windowToCanvas(canvas, e.clientX, e.clientY);
+
+        drawGuidelines(loc.x, loc.y);
+        showLoc(loc.x, loc.y);
+    }
+
+</script>
+</body>
+</html>

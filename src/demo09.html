@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>canvas demo-09</title>
+    <style>
+        html, body {
+            background: #ddd;
+        }
+        canvas {
+            background: #FFF;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>绘制线段</h1>
+    <div>
+        线段颜色：<select id='strokeStyleSelect'>
+            <option value='red'>red</option>
+            <option value='green'>green</option>
+            <option value='blue'>blue</option>
+            <option value='orange'>orange</option>
+            <option value='cornflowerblue' selected>cornflowerblue</option>
+            <option value='goldenrod'>goldenrod</option>
+            <option value='navy'>navy</option>
+            <option value='purple'>purple</option>
+        </select>
+        网格线<input type="checkbox" id="guideline">
+    </div>
+
+    <canvas id="myCanvas" width="800" height="600"></canvas>
+
+<script>
+
+    var strokeStyleSelect = document.getElementById('strokeStyleSelect'),
+        guideline = document.getElementById('guideline'),
+        canvas = document.getElementById('myCanvas'),
+        ctx = canvas.getContext('2d'),
+        isDragging = false,
+        drawingSurfaceImageData,
+        hasGuideline = guideline.checked,
+        mousePosition = {};
+
+    function windowToCanvas(x, y) {
+        var bbox = canvas.getBoundingClientRect();
+        return {
+            x: Math.floor(x - bbox.left * (canvas.width / bbox.width)),
+            y: Math.floor(y - bbox.top * (canvas.height/ bbox.height))
+        }
+    }
+
+    function drawGrid(color, stepX, stepY) {
+        ctx.save();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 0.5;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        for(var lineX = stepX + 0.5; lineX < canvas.height; lineX += stepX) {
+            ctx.moveTo(0, lineX);
+            ctx.lineTo(canvas.width, lineX);
+            ctx.stroke();
+        }
+
+        for(var lineY = stepY + 0.5; lineY < canvas.width; lineY += stepY) {
+            ctx.moveTo(lineY, 0);
+            ctx.lineTo(lineY, canvas.height);
+            ctx.stroke();
+        }
+
+        ctx.restore();
+    }
+
+    function drawGuidelines(x, y) {
+        var canvas = ctx.canvas;
+        // ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.save();
+
+        ctx.beginPath();
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+        ctx.lineWidth = 0.5;
+        ctx.moveTo(0, y + 0.5);
+        ctx.lineTo(canvas.width, y + 0.5);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(x + 0.5, 0);
+        ctx.lineTo(x + 0.5, canvas.height);
+        ctx.stroke();
+
+        ctx.restore();
+    }
+
+    function drawLine(x, y) {
+        ctx.save();
+
+        ctx.beginPath();
+        ctx.moveTo(mousePosition.x, mousePosition.y);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+
+        ctx.restore();
+    }
+
+    function saveDrawingSurface() {
+        drawingSurfaceImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    }
+
+    function restoreDrawingSurface() {
+        ctx.putImageData(drawingSurfaceImageData, 0, 0);
+    }
+
+    canvas.onmousedown = function(e) {
+        console.log('onmousedown called');
+        
+        var loc = windowToCanvas(e.clientX, e.clientY);
+
+        e.preventDefault();
+
+        saveDrawingSurface();
+
+        isDragging = true;
+        mousePosition.x = loc.x;
+        mousePosition.y = loc.y;
+
+        console.log('onmousedown mousePosition', mousePosition);
+        
+    }
+
+    canvas.onmousemove = function(e) {
+        console.log('mousemove called');
+        var loc = windowToCanvas(e.clientX, e.clientY);
+
+        if (isDragging) {
+            restoreDrawingSurface();
+            drawLine(loc.x, loc.y);
+
+            if (hasGuideline) {
+                drawGuidelines(loc.x, loc.y);
+            }
+        }
+    }
+
+    canvas.onmouseup = function(e) {
+        console.log('onmouseup called');
+        
+        var loc = windowToCanvas(e.clientX, e.clientY);
+        
+        isDragging = false;
+
+        restoreDrawingSurface();
+        drawLine(loc.x, loc.y);        
+    }
+
+    // init 
+
+    ctx.strokeStyle = strokeStyleSelect.value;
+    drawGrid('lightgray', 10, 10);
+
+    strokeStyleSelect.onchange = function(e) {
+        ctx.strokeStyle = strokeStyleSelect.value;
+    }
+
+    guideline.onchange = function(e) {
+        hasGuideline = guideline.checked;
+    }
+
+</script>
+</body>
+</html>
