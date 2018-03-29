@@ -69,7 +69,7 @@ gulp.task('clean', function(cb) {
     });
 });
 
-gulp.task('copy', () => {
+gulp.task('copy', ['clean'], () => {
     return gulp.src('src/*.html')
         .pipe(gulp.dest(OUTPUT_PATH));
 });
@@ -109,7 +109,7 @@ function createIndex() {
             } else if (file.match(/demo\d+\.html/)) {
                 num++;
                 links.push(`${num}. <a href="./${file}">${file}</a>`);
-                console.log('Get file ' + file);
+                console.log('Get file \x1b[32m' + file +'\x1b[0m');
             }
         })
         links = links.join('</br>');

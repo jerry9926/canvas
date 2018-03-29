@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>canvas demo-14</title>
+    <style>
+        html, body {
+            background: #ddd;
+        }
+        canvas {
+            background: #FFF;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>剪影效果</h1> 
+
+    <div>
+        线段颜色：<select id='fillStyleSelect'>
+            <option value='red'>red</option>
+            <option value='green'>green</option>
+            <option value='blue'>blue</option>
+            <option value='orange'>orange</option>
+            <option value='cornflowerblue' selected>cornflowerblue</option>
+            <option value='goldenrod'>goldenrod</option>
+            <option value='navy'>navy</option>
+            <option value='purple'>purple</option>
+        </select>
+    </div>
+    
+    <canvas id="myCanvas" width="600" height="400"></canvas>
+
+    <canvas id="myCanvas2" width="600" height="400"></canvas>
+    
+
+    <script>
+        var fillStyleSelect = document.getElementById('fillStyleSelect'),
+            canvas = document.getElementById('myCanvas'),
+            cxt = canvas.getContext('2d');
+
+        function erase() {
+            cxt.clearRect(0, 0, canvas.width, canvas.height);
+            cxt2.clearRect(0, 0, canvas2.width, canvas2.height);
+        }
+
+        function draw(fillStyle) {
+            cxt.beginPath();
+            cxt.arc(canvas.width / 2, canvas.height / 2, 75, 0, Math.PI * 2, true);
+            
+            cxt.arc(canvas.width / 2, canvas.height / 2, 100, 0, Math.PI * 2, false);
+
+            cxt.fillStyle = fillStyle;
+
+            cxt.shadowColor = 'rgba(0, 0, 0, 0.25)';
+            cxt.shadowOffsetX = 5;
+            cxt.shadowOffsetY = 5;
+            cxt.shadowBlur = 10;
+            
+            cxt.fill();
+        }
+
+        function draw2(fillStyle) {
+            drawTriangle(canvas.width / 2, canvas.height / 2, 75);
+
+            // cxt2.beginPath();
+            cxt2.arc(canvas.width / 2, canvas.height / 2, 100, 0, Math.PI * 2, true);
+
+            cxt2.fillStyle = fillStyle;
+            // cxt2.stroke();
+
+            cxt2.shadowColor = 'rgba(0, 0, 0, 0.25)';
+            cxt2.shadowOffsetX = 5;
+            cxt2.shadowOffsetY = 5;
+            cxt2.shadowBlur = 10;
+            
+            cxt2.fill();
+        }
+
+        function drawTriangle(cx, cy, r) {
+            cxt2.beginPath();
+            cxt2.moveTo(cx, cy - r);
+            cxt2.lineTo(cx + Math.cos(Math.PI / 6) * r, cy + Math.sin(Math.PI / 6) * r);
+            cxt2.lineTo(cx - Math.cos(Math.PI / 6) * r, cy + Math.sin(Math.PI / 6) * r);
+            cxt2.lineTo(cx, cy - r);            
+        }
+
+        draw('goldenrod');
+
+        fillStyleSelect.onchange = function(e) {
+            erase();
+            draw(fillStyleSelect.value);
+            draw2(fillStyleSelect.value);
+        }
+
+        var canvas2 = document.getElementById('myCanvas2'),
+            cxt2 = canvas2.getContext('2d');
+
+        draw2('goldenrod');
+    </script>
+</body>
+</html>

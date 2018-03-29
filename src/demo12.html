@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>canvas demo-12</title>
+    <style>
+        html, body {
+            background: #ddd;
+        }
+        canvas {
+            background: #FFF;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>渐变色</h1> 
+    
+    <canvas id="myCanvas" width="600" height="400"></canvas>
+
+    <canvas id="myCanvas2" width="600" height="400"></canvas>
+    
+    <script>
+        var canvas = document.getElementById('myCanvas'),
+            cxt = canvas.getContext('2d'),
+            gradient = cxt.createLinearGradient(0, 0, canvas.width, 0);
+
+        cxt.lineJoin = 'round';
+        cxt.lineWidth = 30;
+
+        // gradient.addColorStop(0, 'blue');
+        // gradient.addColorStop(0.5, 'white');
+        // gradient.addColorStop(1, 'green');
+        var odd = 0;
+        for(var i = 0; i <= 1; i = i + 0.25) {
+            if (odd % 2 === 0) {
+                gradient.addColorStop(i, 'black');
+            } else {
+                gradient.addColorStop(i, 'white');
+            }
+            odd++;
+        }
+
+        cxt.save();
+
+        cxt.fillStyle = gradient;
+        cxt.fillRect(0, 0, canvas.width, canvas.height);
+
+        cxt.restore();
+
+        cxt.font = '24px Helvetica';
+        cxt.fillText('Click anywhere to erase', 175, 200);
+
+        cxt.strokeStyle = 'goldenrod';
+        cxt.fillStyle = 'rgba(0, 0, 255, 0.5)';
+        // cxt.fillStyle = 'rgba(0, 0, 255, 0.5)';
+
+        cxt.strokeRect(75, 100, 200, 200);
+        cxt.fillRect(320, 100, 200, 200);
+
+        cxt.canvas.onmousedown = function(e) {
+            cxt.clearRect(0, 0, canvas.width, canvas.height);
+        }
+    </script>
+
+    <script>
+        var canvas2 = document.getElementById('myCanvas2'),
+            cxt2 = canvas2.getContext('2d'),
+            gradient2 = cxt2.createRadialGradient(canvas2.width / 2, canvas2.height / 2, 1, canvas2.width / 2, canvas2.height / 2, 400);
+
+        cxt2.lineJoin = 'round';
+        cxt2.lineWidth = 30;
+
+        var odd = 0;
+        for(var i = 0; i <= 1; i = i + 0.02) {
+            if (odd % 2 === 0) {
+                gradient2.addColorStop(i, 'black');
+            } else {
+                gradient2.addColorStop(i, 'white');
+            }
+            odd++;
+        }
+
+        // gradient2.addColorStop(0, 'black');
+        // gradient2.addColorStop(0.5, 'white');
+        // gradient2.addColorStop(1, 'black');
+
+        cxt2.save();
+
+        cxt2.fillStyle = gradient2;
+        cxt2.fillRect(0, 0, canvas2.width, canvas2.height);
+
+        cxt2.restore();
+
+        cxt2.font = '24px Helvetica';
+        cxt2.fillText('Click anywhere to erase', 175, 200);
+
+        cxt2.strokeStyle = 'goldenrod';
+        cxt2.fillStyle = 'rgba(0, 0, 255, 0.5)';
+        // cxt2.fillStyle = 'rgba(0, 0, 255, 0.5)';
+
+        cxt2.strokeRect(75, 100, 200, 200);
+        cxt2.fillRect(320, 100, 200, 200);
+
+        cxt2.canvas.onmousedown = function(e) {
+            cxt2.clearRect(0, 0, canvas2.width, canvas2.height);
+        }
+    </script>
+</body>
+</html>

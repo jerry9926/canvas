@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>canvas demo-15</title>
+    <style>
+        html, body {
+            background: #ddd;
+        }
+        canvas {
+            background: #FFF;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>绘制虚线</h1> 
+
+    <div>
+        线段颜色：<select id='strokeStyleSelect'>
+            <option value='red'>red</option>
+            <option value='green'>green</option>
+            <option value='blue'>blue</option>
+            <option value='orange'>orange</option>
+            <option value='cornflowerblue' selected>cornflowerblue</option>
+            <option value='goldenrod'>goldenrod</option>
+            <option value='navy'>navy</option>
+            <option value='purple'>purple</option>
+        </select>
+        <button onclick="erase()">清除</button>
+        <!-- <p id="posotion"></p> -->
+    </div>
+    
+    <canvas id="myCanvas" width="600" height="400"></canvas>
+    
+
+    <script>
+        var strokeStyleSelect = document.getElementById('strokeStyleSelect'),
+            canvas = document.getElementById('myCanvas'),
+            cxt = canvas.getContext('2d'),
+            isDragging = false,
+            mouse = {},
+            strokeStyle = 'cornflowerblue',
+            canvasImageData;
+
+        function erase() {
+            cxt.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function drawDashedLine(cxt, x1, y1, x2, y2, dashLength) {
+            cxt.save();
+            cxt.beginPath();
+            
+            dashLength = dashLength === undefined ? 5 : dashLength;
+
+            var deltaX = x2 - x1,
+                deltaY = y2 - y1,
+                numDashes = Math.floor(Math.sqrt(deltaX * deltaX + deltaY * deltaY) / dashLength);
+
+            for(var i = 0; i < numDashes; i++) {
+                cxt[i % 2 === 0 ? 'moveTo' : 'lineTo'](x1 + (deltaX / numDashes) * i, y1 + (deltaY / numDashes) * i);
+            }
+
+            cxt.strokeStyle = strokeStyle;
+
+            cxt.stroke();
+            cxt.restore();            
+        }
+
+        function saveCanvasImageData() {
+            canvasImageData = cxt.getImageData(0, 0, canvas.width, canvas.height);
+        }
+
+        function restoreCanvasImageData() {
+            cxt.putImageData(canvasImageData, 0, 0);
+        }
+
+        drawDashedLine(cxt, 10, 10, 300, 300, 5);
+
+        strokeStyleSelect.onchange = function(e) {
+            // erase();
+            strokeStyle = e.target.value;
+        }
+
+        function convertPosition(x, y, target) {
+            var rect = target.getBoundingClientRect();
+
+            return {
+                x: Math.floor(x - rect.left * (target.width / rect.width)),
+                y: Math.floor(y - rect.top * (target.height / rect.height))
+            }
+        }
+
+        canvas.onmousedown = function(e) {
+            console.info('onmousedown called');
+
+            const position = convertPosition(e.clientX, e.clientY, e.target);
+            // document.getElementById('posotion').innerHTML = '(' + position.x + ', ' + position.y + ')';
+            mouse = position;
+
+            isDragging = true;
+            saveCanvasImageData();
+
+            e.preventDefault();        
+        }
+
+        canvas.onmousemove = function(e) {
+            console.info('onmousemove called');
+            if (isDragging) {
+                restoreCanvasImageData();            
+                
+                const position = convertPosition(e.clientX, e.clientY, e.target);
+                drawDashedLine(cxt, mouse.x, mouse.y, position.x, position.y);  
+            }
+        }
+
+        canvas.onmouseup = function(e) {
+            restoreCanvasImageData();
+
+            const position = convertPosition(e.clientX, e.clientY, e.target);
+            
+            drawDashedLine(cxt, mouse.x, mouse.y, position.x, position.y);
+            isDragging = false;                             
+        }
+    </script>
+</body>
+</html>

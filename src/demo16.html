@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>canvas demo-16</title>
+    <style>
+        html, body {
+            background: #ddd;
+        }
+        canvas {
+            background: #FFF;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>刻度仪表盘</h1> 
+    
+    <canvas id="myCanvas" width="650" height="450"></canvas>
+    
+
+    <script>
+        var canvas = document.getElementById('myCanvas'),
+            cxt = canvas.getContext('2d'),
+            ARC_RADIUS = 150,
+            OUT_CRICLE_WIDTH = 55;
+            IN_CRICLE_WIDTH = 35;
+            TRACK_STROKE_STYLE = 'rgba(100, 140, 230, 0.5)',
+            TRACK_TEXT_STYLE = 'rgba(0, 0, 230, 0.9)';
+
+        function erase() {
+            cxt.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function drawCenterCricle() {
+            cxt.beginPath();
+
+            cxt.arc(canvas.width / 2, canvas.height / 2, 15, 0, Math.PI * 2, true);
+            
+            
+        }
+
+        function drawCricle() {
+            cxt.beginPath();
+
+            cxt.arc(canvas.width / 2, canvas.height / 2, ARC_RADIUS + OUT_CRICLE_WIDTH, 0, Math.PI * 2, true);
+
+            cxt.arc(canvas.width / 2, canvas.height / 2, ARC_RADIUS + IN_CRICLE_WIDTH, 0, Math.PI * 2, false);
+
+            cxt.save();
+            cxt.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            cxt.strokeStyle = 'rgba(100, 140, 230, 0.1)';
+
+            cxt.shadowColor = 'rgba(0, 0, 0, 0.7)';
+            cxt.shadowOffsetX = 3;
+            cxt.shadowOffsetY = 3;
+            cxt.shadowBlur = 6;
+
+            cxt.fill();
+            cxt.stroke();
+
+            cxt.beginPath();
+
+            cxt.arc(canvas.width / 2, canvas.height / 2, ARC_RADIUS + IN_CRICLE_WIDTH - 10, 0, Math.PI * 2, false);            
+
+            cxt.stroke();
+            cxt.restore();
+        }
+
+        function drawTrackLine() {
+            
+            var cx = canvas.width / 2,
+                cy = canvas.height / 2,
+                num = 0,
+                radius = ARC_RADIUS + IN_CRICLE_WIDTH;
+
+            for(var angle = 0; angle < 2 * Math.PI; angle += Math.PI / 64) {
+                var TRACK_WIDTH = num % 4 === 0 ? 10 : 5; 
+                var p1x = cx + Math.cos(angle) * radius;
+                var p1y = cy + Math.sin(angle) * radius;
+                var p2x = cx + Math.cos(angle) * (radius - TRACK_WIDTH);
+                var p2y = cy + Math.sin(angle) * (radius - TRACK_WIDTH);
+
+                console.info(p1x, p1y);
+                console.info(p2x, p2y);
+
+                cxt.beginPath();
+                            
+                cxt.moveTo(p1x, p1y);
+                cxt.lineTo(p2x, p2y);
+
+                cxt.lineWidth = 1;
+                cxt.strokeStyle = TRACK_STROKE_STYLE;
+
+                cxt.stroke();
+                num++;
+            }
+        }
+
+        function drawTrackNum() {
+            var cx = canvas.width / 2,
+                cy = canvas.height / 2;
+
+            for(var angle = 0, track = 0; angle < 2 * Math.PI; angle += 2 * Math.PI / 8) {
+                var text = Math.floor(track);
+                var p1x = cx + Math.cos(angle) * (ARC_RADIUS + IN_CRICLE_WIDTH - 30);
+                var p1y = cy + Math.sin(angle) * (ARC_RADIUS + IN_CRICLE_WIDTH - 30);
+
+                console.info(p1x, p1y);
+                
+                cxt.beginPath();
+                cxt.save();
+
+                cxt.moveTo(p1x, p1y);
+
+                cxt.font = '12px';
+                cxt.textAlign = 'center';
+                cxt.textBaseline = 'middle';
+
+                cxt.strokeText(text, p1x, p1y);
+
+                cxt.stroke();
+                cxt.restore();
+              
+                track += 360 / 8;
+            }
+        }
+
+        function draw() {
+            drawCricle();
+            drawTrackLine();
+            drawTrackNum();
+        }
+
+        // 默认设置
+
+
+        cxt.shadowOffsetX = 2;
+        cxt.shadowOffsetY = 2;
+        cxt.shadowBlur = 4;
+        draw();
+
+    </script>
+</body>
+</html>

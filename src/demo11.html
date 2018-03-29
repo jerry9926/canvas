@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>canvas demo-11</title>
+    <style>
+        html, body {
+            background: #ddd;
+        }
+        canvas {
+            background: #FFF;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>矩形</h1> 
+    
+    <canvas id="myCanvas" width="600" height="400"></canvas>
+
+    <script>
+        var canvas = document.getElementById('myCanvas'),
+            cxt = canvas.getContext('2d');
+
+        cxt.lineJoin = 'bevel';
+        cxt.lineWidth = 30;
+
+        cxt.font = '24px Helvetica';
+        cxt.fillText('Click anywhere to erase', 175, 200);
+
+        cxt.strokeStyle = 'goldenrod';
+        cxt.fillStyle = 'rgba(0, 0, 255, 0.5)';
+
+        cxt.strokeRect(75, 100, 200, 200);
+        cxt.fillRect(320, 100, 200, 200);
+
+        cxt.canvas.onmousedown = function(e) {
+            cxt.clearRect(0, 0, canvas.width, canvas.height);
+        }
+    </script>
+</body>
+</html>
